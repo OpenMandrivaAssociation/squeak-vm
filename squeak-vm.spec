@@ -9,6 +9,8 @@ Group:         Development/Other
 Source0:       ftp://st.cs.uiuc.edu/Smalltalk/Squeak/%version/unix-linux/src/Squeak-%version-%major.src.tar.gz
 Source1:       linex.tar.bz2
 Source2:       startsqueak
+Patch0:         Squeak-3.9-8.src.patch
+Patch1:         Squeak-3.9-8-avoid-depth-32-visuals.patch
 URL:           http://www.squeak.org
 Requires:      squeak-sources >= 3
 Requires:      squeak-image   >= 3.0.3552
@@ -24,11 +26,15 @@ BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-buildroot
 Requires(post): desktop-file-utils
 Requires(postun): desktop-file-utils
 
+ExclusiveArch: i586
+
 %description
 Squeak is an open, highly-portable Smalltalk-80 implementation whose virtual machine is written entirely in Smalltalk, making it easy to debug, analyze, and change. To achieve practical performance, a translator produces an equivalent C program whose performance is comparable to commercial Smalltalks.
 
 %prep
 %setup -q -n Squeak-%version-%major -a 1
+%patch0
+%patch1 -p1
 mkdir build; cd build; ../platforms/unix/config/configure --prefix=%{buildroot}/usr --mandir=%{buildroot}/usr/share/man
 
 %build
@@ -48,7 +54,8 @@ install linex/squeak.applications %{buildroot}/usr/share/application-registry
 install linex/squeak.desktop %{buildroot}/usr/share/applications
 strip -s --remove-section=.comment %{buildroot}/usr/lib/squeak/%{version}-%{major}/*
 install -m 0755 %{SOURCE2} %{buildroot}/usr/bin
-mv %{buildroot}/usr/doc/squeak %{buildroot}/usr/share/doc/
+mkdir -p %{buildroot}/usr/share/doc/squeak
+mv %{buildroot}/usr/share/doc/squeak/Squeak/* %{buildroot}/usr/share/doc/squeak/
 
 #menu
 
