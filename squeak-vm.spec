@@ -55,7 +55,7 @@ install linex/squeak.desktop %{buildroot}/usr/share/applications
 strip -s --remove-section=.comment %{buildroot}/usr/lib/squeak/%{version}-%{major}/*
 install -m 0755 %{SOURCE2} %{buildroot}/usr/bin
 mkdir -p %{buildroot}/usr/share/doc/squeak
-mv %{buildroot}/usr/share/doc/squeak/Squeak/* %{buildroot}/usr/share/doc/squeak/
+#mv %{buildroot}/usr/share/doc/squeak/Squeak/* %{buildroot}/usr/share/doc/squeak/
 
 #menu
 
