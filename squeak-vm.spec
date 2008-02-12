@@ -29,7 +29,10 @@ Requires(postun): desktop-file-utils
 ExclusiveArch: i586
 
 %description
-Squeak is an open, highly-portable Smalltalk-80 implementation whose virtual machine is written entirely in Smalltalk, making it easy to debug, analyze, and change. To achieve practical performance, a translator produces an equivalent C program whose performance is comparable to commercial Smalltalks.
+Squeak is an open, highly-portable Smalltalk-80 implementation whose virtual
+machine is written entirely in Smalltalk, making it easy to debug, analyze, and
+change. To achieve practical performance, a translator produces an equivalent C
+program whose performance is comparable to commercial Smalltalks.
 
 %prep
 %setup -q -n Squeak-%version-%major -a 1
