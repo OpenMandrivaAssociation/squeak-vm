@@ -3,7 +3,7 @@
 Summary:       Squeak Virtual Machine
 Name:          squeak-vm
 Version:       3.9
-Release:       %mkrel 4
+Release:       %mkrel 5
 License:       Free with restrictions (http://www.squeak.org/download/license.html)
 Group:         Development/Other
 Source0:       ftp://st.cs.uiuc.edu/Smalltalk/Squeak/%version/unix-linux/src/Squeak-%version-%major.src.tar.gz
