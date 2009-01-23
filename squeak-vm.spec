@@ -29,6 +29,7 @@ BuildRequires: libx11-devel
 BuildRequires: gcc
 BuildRequires: desktop-file-utils
 BuildRequires: libalsa-devel
+BuildRequires: dbus-devel
 Requires:       zenity
 
 #
