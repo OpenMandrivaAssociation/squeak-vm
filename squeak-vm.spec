@@ -29,6 +29,16 @@ BuildRequires: libx11-devel
 BuildRequires: gcc
 BuildRequires: desktop-file-utils
 BuildRequires: libalsa-devel
+BuildRequires:  libvorbis-devel
+BuildRequires:  libtheora-devel
+BuildRequires:  speex-devel
+BuildRequires:  dbus-devel
+BuildRequires:  pango-devel
+BuildRequires:  gstreamer0.10-devel
+BuildRequires:  libice-devel
+BuildRequires:  libsm-devel
+BuildRequires:  libxext-devel
+BuildRequires:  e2fsprogs-devel
 BuildRequires: dbus-devel
 Requires:       zenity
 
