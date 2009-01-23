@@ -8,7 +8,7 @@ Version:        %{major}.%{minor}
 Release:        %mkrel 1
 Summary:        The Squeak virtual machine
 
-Group:          Development/Languages
+Group:          Development/Other
 License:        MIT
 URL:            http://squeakvm.org/unix
 Source0:        http://ftp.squeak.org/%{major}/unix-linux/%{source}.src.tar.gz
