@@ -61,7 +61,7 @@ This package contains just the Squeak virtual machine.
 %if 0%{?nonXOplugins}
 %package nonXOplugins
 Summary:        Non-XO Plugins for the Squeak virtual machine
-Group:          Development/Languages
+Group:          Development/Other
 Requires:       squeak-vm = %{version}-%{release}
 %description nonXOplugins
 Plugins for the Squeak virtual machine.
