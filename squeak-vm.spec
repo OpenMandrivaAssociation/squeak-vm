@@ -5,7 +5,7 @@
 
 Name:           squeak-vm
 Version:        %{major}.%{minor}
-Release:        %mkrel 1
+Release:        %mkrel 2
 Summary:        The Squeak virtual machine
 
 Group:          Development/Other
