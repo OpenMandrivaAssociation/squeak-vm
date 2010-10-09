@@ -36,9 +36,8 @@ Requires:	zenity
 Obsoletes:	squeak-vm-nonXOplugins
 
 Patch0:		squeak-vm-rpath.patch
-Patch1:		squeak-vm-install-inisqueak.patch
-Patch2:		squeak-vm-imgdir.patch
-Patch3:		squeak-vm-tail-options.patch
+Patch1:		squeak-vm-imgdir.patch
+Patch2:		squeak-vm-tail-options.patch
 
 %description
 Squeak is a full-featured implementation of the Smalltalk programming
@@ -57,7 +56,6 @@ find . -name '*.[ch]' -exec chmod ug=rw,o=r {} \;
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
 
 %build
 mkdir -p bld
@@ -68,16 +66,21 @@ pushd ../unix/cmake
     %configure
 popd
 
-pushd unix/config
-    %configure
-popd
-
 make %{?_smp_mflags}
 
 %install
 rm -rf %{buildroot}
 make -C bld install ROOT=%{buildroot} DESTDIR=%{buildroot}
-make -C unix/config -f Makefile.install ROOT=%{buildroot} DESTDIR=%{buildroot} install-inisqueak
+cp -f unix/config/inisqueak.in %{buildroot}%{_bindir}/inisqueak
+perl -pi					\
+	-e 's|\@SQ_MAJOR\@|41|;'		\
+	-e 's|\@SQ_VERSION\@|4.1|;'		\
+	-e 's|\@prefix\@|%{_prefix}|;'		\
+	-e 's|\@exec_prefix\@|%{_prefix}|;'	\
+	-e 's|\@bindir\@|%{_bindir}|;'		\
+	-e 's|\@imgdir\@|%{_datadir}/squeak|;'	\
+	-e 's|\@plgdir\@|%{_datadir}/squeak|;'	\
+	%{buildroot}%{_bindir}/inisqueak
 
 # these files will be put in std RPM doc location
 rm -rf %{buildroot}%{_prefix}/doc/squeak
