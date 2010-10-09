@@ -81,6 +81,9 @@ perl -pi					\
 	-e 's|\@imgdir\@|%{_datadir}/squeak|;'	\
 	-e 's|\@plgdir\@|%{_datadir}/squeak|;'	\
 	%{buildroot}%{_bindir}/inisqueak
+perl -pi					\
+	-e 's|/lib/squeak|/%{_lib}/squeak|;'	\
+	%{buildroot}%{_bindir}/squeak.sh
 
 # these files will be put in std RPM doc location
 rm -rf %{buildroot}%{_prefix}/doc/squeak
