@@ -101,7 +101,7 @@ done
 
 %ifarch x86_64 ppc64
     mkdir -p %{buildroot}%{_libdir}/squeak/%{vmver}
-    mv -f %{buildroot}%{_prefix}/{lib,%{_lib}}/squeak/%{vmver}/*
+    mv -f %{buildroot}%{_prefix}/{lib,%{_lib}}/squeak/%{vmver}
 %endif
 
 # If an image cant find the .sources in the current directory it will look
