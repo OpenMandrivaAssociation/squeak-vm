@@ -1,7 +1,7 @@
 %define vmver	4.0.3-2202
 Name:		squeak-vm
 Version:	4.0.3.2202
-Release:	%mkrel 1
+Release:	%mkrel 2
 Summary:	The Squeak virtual machine
 Group:		Development/Other
 License:	MIT
@@ -100,7 +100,7 @@ do
 done
 
 %ifarch x86_64 ppc64
-    mkdir -p %{buildroot}%{_libdir}/squeak/%{vmver}
+    mkdir -p %{buildroot}%{_libdir}/squeak
     mv -f %{buildroot}%{_prefix}/{lib,%{_lib}}/squeak/%{vmver}
 %endif
 
