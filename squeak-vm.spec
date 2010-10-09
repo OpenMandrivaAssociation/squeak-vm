@@ -99,6 +99,11 @@ do
   install -m0644 squeaksource${size}.png %{icons_dir}/${size}x${size}/mimetypes/application-x-squeak-source.png
 done
 
+%ifarch x86_64 ppc64
+    mkdir -p %{buildroot}%{_libdir}/squeak/%{vmver}
+    mv -f %{buildroot}%{_prefix}/{lib,%{_lib}}/squeak/%{vmver}/*
+%endif
+
 # If an image cant find the .sources in the current directory it will look
 # in %{_libdir}/squeak/%{vmver}
 cd %{buildroot}%{_libdir}/squeak/%{vmver}
