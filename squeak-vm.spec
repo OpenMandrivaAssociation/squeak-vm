@@ -60,11 +60,7 @@ find . -name '*.[ch]' -exec chmod ug=rw,o=r {} \;
 %build
 mkdir -p bld
 cd bld
-
-pushd ../unix/cmake
-    CPPFLAGS=-DSUGAR \
-    %configure
-popd
+CPPFLAGS=-DSUGAR ../unix/cmake/configure --prefix=%{_prefix}
 
 make %{?_smp_mflags}
 
