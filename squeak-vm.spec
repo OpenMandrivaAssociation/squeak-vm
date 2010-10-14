@@ -1,7 +1,7 @@
 %define vmver	4.0.3-2202
 Name:		squeak-vm
 Version:	4.0.3.2202
-Release:	%mkrel 2
+Release:	%mkrel 3
 Summary:	The Squeak virtual machine
 Group:		Development/Other
 License:	MIT
@@ -79,7 +79,7 @@ perl -pi					\
 	%{buildroot}%{_bindir}/inisqueak
 perl -pi					\
 	-e 's|/lib/squeak|/%{_lib}/squeak|;'	\
-	%{buildroot}%{_bindir}/squeak.sh
+	%{buildroot}%{_bindir}/squeak{,.sh}
 
 # these files will be put in std RPM doc location
 rm -rf %{buildroot}%{_prefix}/doc/squeak
