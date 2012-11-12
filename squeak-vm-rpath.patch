@@ -1,0 +1,10 @@
+diff -p -up Squeak-4.0.3.2202-src/unix/config/make.prg.in.orig Squeak-4.0.3.2202-src/unix/config/make.prg.in
+--- Squeak-4.0.3.2202-src/unix/config/make.prg.in.orig	2010-10-09 01:10:23.000000000 -0300
++++ Squeak-4.0.3.2202-src/unix/config/make.prg.in	2010-10-09 01:10:32.000000000 -0300
+@@ -11,5 +11,5 @@ COMPILE		= $(CC) $(CFLAGS) $(XCFLAGS) \
+ 		  $(LDFLAGS) $(XLDFLAGS) -export-dynamic -c -o
+ LINK		= $(LIBTOOL) --mode=link \
+ 		  $(CC) $(CFLAGS) $(XCFLAGS) \
+-		  $(LDFLAGS) $(XLDFLAGS) -export-dynamic -R$(libdir) -o
++		  $(LDFLAGS) $(XLDFLAGS) -export-dynamic -o
+ RANLIB		= :
