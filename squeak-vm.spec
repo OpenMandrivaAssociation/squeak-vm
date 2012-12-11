@@ -8,7 +8,6 @@ License:	MIT
 URL:            http://squeakvm.org/unix
 Source0:	http://ftp.squeak.org/%{major}/unix-linux/Squeak-%{version}-src.tar.gz
 Source2:	squeak-desktop-files.tar.gz
-BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-buildroot
 
 Requires(post):	desktop-file-utils
 Requires(postun): desktop-file-utils
@@ -17,19 +16,19 @@ BuildRequires:	cmake
 BuildRequires:	libaudiofile-devel
 BuildRequires:	X11-devel
 BuildRequires:	x11-proto-devel
-BuildRequires:	libx11-devel
+BuildRequires:	pkgconfig(x11)
 BuildRequires:	desktop-file-utils
-BuildRequires:	libalsa-devel
-BuildRequires:	libvorbis-devel
-BuildRequires:	libtheora-devel
-BuildRequires:	speex-devel
+BuildRequires:	alsa-oss-devel
+BuildRequires:	pkgconfig(vorbis)
+BuildRequires:	pkgconfig(theora)
+BuildRequires:	pkgconfig(speex)
 BuildRequires:	dbus-devel
 BuildRequires:	pango-devel
-BuildRequires:	gstreamer0.10-devel
+BuildRequires:	pkgconfig(gstreamer-0.10)
 BuildRequires:	libice-devel
 BuildRequires:	libsm-devel
-BuildRequires:	libxext-devel
-BuildRequires:	e2fsprogs-devel
+BuildRequires:	pkgconfig(xext)
+BuildRequires:	pkgconfig(ext2fs)
 BuildRequires:	dbus-devel
 Requires:	zenity
 
@@ -65,7 +64,6 @@ CPPFLAGS=-DSUGAR ../unix/cmake/configure --prefix=%{_prefix} --libdir=%{_libdir}
 make %{?_smp_mflags}
 
 %install
-rm -rf %{buildroot}
 make -C bld install ROOT=%{buildroot} DESTDIR=%{buildroot}
 cp -f unix/config/inisqueak.in %{buildroot}%{_bindir}/inisqueak
 perl -pi					\
@@ -110,27 +108,7 @@ cd %{buildroot}%{_libdir}/squeak/%{vmver}
 DOTDOTS=$(echo %{_libdir}/squeak/%{vmver} | sed -e 's:/[^/]\+:../:g')
 ln -s ${DOTDOTS}%{_datadir}/squeak/SqueakV41.sources .
 
-%clean
-rm -rf %{buildroot}
-
-%if %mdkversion < 200900
-%post
-%update_menus
-%update_desktop_database
-%update_mime_database
-%update_icon_cache gnome
-%endif
-
-%if %mdkversion < 200900
-%postun
-%clean_menus
-%clean_desktop_database
-%clean_mime_database
-%clean_icon_cache hicolor
-%endif
-
 %files
-%defattr(-,root,root,-)
 %doc unix/ChangeLog unix/doc/{README*,LICENSE,*RELEASE_NOTES}
 %{_bindir}/*
 %{_datadir}/applications/*
