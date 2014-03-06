@@ -1,20 +1,18 @@
-%define vmver	4.0.3-2202
+%define vmver	4.10.2
+%define svntag	2614
 Name:		squeak-vm
-Version:	4.0.3.2202
-Release:	%mkrel 3
+Version:	%{vmver}.%{svntag}
+Release:	%mkrel 4
 Summary:	The Squeak virtual machine
 Group:		Development/Other
 License:	MIT
 URL:            http://squeakvm.org/unix
-Source0:	http://ftp.squeak.org/%{major}/unix-linux/Squeak-%{version}-src.tar.gz
+Source0:	http://squeakvm.org/unix/release/Squeak-%{version}-src.tar.gz
 Source2:	squeak-desktop-files.tar.gz
-
-Requires(post):	desktop-file-utils
-Requires(postun): desktop-file-utils
+Patch0:		Squeak-4.10.2.2614-fix-str-fmt.patch
 
 BuildRequires:	cmake
-BuildRequires:	libaudiofile-devel
-BuildRequires:	X11-devel
+BuildRequires:	pkgconfig(audiofile)
 BuildRequires:	x11-proto-devel
 BuildRequires:	pkgconfig(x11)
 BuildRequires:	desktop-file-utils
@@ -22,21 +20,15 @@ BuildRequires:	alsa-oss-devel
 BuildRequires:	pkgconfig(vorbis)
 BuildRequires:	pkgconfig(theora)
 BuildRequires:	pkgconfig(speex)
-BuildRequires:	dbus-devel
-BuildRequires:	pango-devel
+BuildRequires:	pkgconfig(dbus-1)
+BuildRequires:	pkgconfig(pango)
 BuildRequires:	pkgconfig(gstreamer-0.10)
-BuildRequires:	libice-devel
-BuildRequires:	libsm-devel
+BuildRequires:	pkgconfig(ice)
+BuildRequires:	pkgconfig(sm)
 BuildRequires:	pkgconfig(xext)
 BuildRequires:	pkgconfig(ext2fs)
-BuildRequires:	dbus-devel
 Requires:	zenity
-
 Obsoletes:	squeak-vm-nonXOplugins
-
-Patch0:		squeak-vm-rpath.patch
-Patch1:		squeak-vm-imgdir.patch
-Patch2:		squeak-vm-tail-options.patch
 
 %description
 Squeak is a full-featured implementation of the Smalltalk programming
@@ -47,25 +39,23 @@ This package contains just the Squeak virtual machine.
 
 %prep
 %setup -q -n Squeak-%{version}-src -a 2
+%patch0 -p0
 
 # The source files chmod'd here have the execute bit set in the upstream tarball
 # which bothers rpmlint, need submit a request upstream to have this changed
 find . -name '*.[ch]' -exec chmod ug=rw,o=r {} \;
 
-%patch0 -p1
-%patch1 -p1
-%patch2 -p1
-
 %build
-mkdir -p bld
-cd bld
-CPPFLAGS=-DSUGAR ../unix/cmake/configure --prefix=%{_prefix} --libdir=%{_libdir}
-
-make %{?_smp_mflags}
+pushd unix
+%cmake -DVM_HOST="%{_host}" -DVM_VERSION="%{vmver}-%{svntag}" -DPLATFORM_SOURCE_VERSION="%{svntag}"
+%make
+popd
 
 %install
-make -C bld install ROOT=%{buildroot} DESTDIR=%{buildroot}
-cp -f unix/config/inisqueak.in %{buildroot}%{_bindir}/inisqueak
+pushd unix
+%makeinstall_std -C build
+popd
+#cp -f unix/config/inisqueak.in %{buildroot}%{_bindir}/inisqueak
 perl -pi					\
 	-e 's|\@SQ_MAJOR\@|41|;'		\
 	-e 's|\@SQ_VERSION\@|4.1|;'		\
@@ -99,13 +89,13 @@ done
 
 %ifarch x86_64 ppc64
     mkdir -p %{buildroot}%{_libdir}/squeak
-    mv -f %{buildroot}%{_prefix}/{lib,%{_lib}}/squeak/%{vmver}
+    mv -f %{buildroot}%{_prefix}/{lib,%{_lib}}/squeak/%{vmver}-%{svntag}
 %endif
 
 # If an image cant find the .sources in the current directory it will look
 # in %{_libdir}/squeak/%{vmver}
-cd %{buildroot}%{_libdir}/squeak/%{vmver}
-DOTDOTS=$(echo %{_libdir}/squeak/%{vmver} | sed -e 's:/[^/]\+:../:g')
+cd %{buildroot}%{_libdir}/squeak/%{vmver}-%{svntag}
+DOTDOTS=$(echo %{_libdir}/squeak/%{vmver}-%{svntag} | sed -e 's:/[^/]\+:../:g')
 ln -s ${DOTDOTS}%{_datadir}/squeak/SqueakV41.sources .
 
 %files

@@ -1,0 +1,11 @@
+--- Cross/plugins/Squeak3D/b3dMain.c~	2006-09-15 01:52:42.000000000 +0800
++++ Cross/plugins/Squeak3D/b3dMain.c	2013-06-08 13:13:18.791224480 +0800
+@@ -63,7 +63,7 @@
+ /*************************************************************/
+ 
+ void b3dAbort(char *msg){
+-	printf(msg);
++	printf("%s",msg);
+ 	exit(-1);
+ }
+ 

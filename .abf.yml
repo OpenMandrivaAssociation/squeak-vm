@@ -1,3 +1,4 @@
 sources:
-  "Squeak-4.0.3.2202-src.tar.gz": 5959af74e9b45289d6c171c1b45ccf9c1c64f239
-  "squeak-desktop-files.tar.gz": 9456bb0058d91d180bc84f6e6ca1ca1dfb2961d4
+  Squeak-4.0.3.2202-src.tar.gz: 5959af74e9b45289d6c171c1b45ccf9c1c64f239
+  Squeak-4.10.2.2614-src.tar.gz: bd807730537122b220840b4a89f04a6689f435c2
+  squeak-desktop-files.tar.gz: 9456bb0058d91d180bc84f6e6ca1ca1dfb2961d4
