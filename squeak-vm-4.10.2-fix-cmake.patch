@@ -1,0 +1,33 @@
+diff -up Squeak-4.10.2.2614-src-no-mp3/unix/CMakeLists.txt.orig Squeak-4.10.2.2614-src-no-mp3/unix/CMakeLists.txt
+--- Squeak-4.10.2.2614-src-no-mp3/unix/CMakeLists.txt.orig	2012-09-17 03:03:14.000000000 +0200
++++ Squeak-4.10.2.2614-src-no-mp3/unix/CMakeLists.txt	2012-11-22 18:21:16.413017772 +0100
+@@ -23,10 +23,14 @@ SET (prefix  ${CMAKE_INSTALL_PREFIX})
+ 
+ SET (version ${VM_VERSION})
+ 
++if(NOT DEFINED LIB_SUFFIX AND CMAKE_SYSTEM_PROCESSOR MATCHES "64$")
++    set(LIB_SUFFIX 64)
++endif()
++
+ SET (bindir bin)
+-SET (imgdir lib/squeak)
+-SET (plgdir lib/squeak/${version}${versionsuffix})
+-SET (mandir man/man1)
++SET (imgdir lib${LIB_SUFFIX}/squeak)
++SET (plgdir lib${LIB_SUFFIX}/squeak/${version}${versionsuffix})
++SET (mandir share/man/man1)
+ SET (docdir share/doc/squeak-${version})
+ 
+ GET_CMAKE_PROPERTY (vars VARIABLES)
+@@ -135,9 +139,9 @@ SET (ioUtcWithOffset sqUnixUtcWithOffset
+ CONFIG_DEFINE (ioUtcWithOffset)
+ 
+ SET (CMAKE_SKIP_BUILD_RPATH TRUE)
+-SET (CMAKE_BUILD_WITH_INSTALL_RPATH TRUE) 
++SET (CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+ SET (CMAKE_INSTALL_RPATH "")
+-SET (CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
++SET (CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
+ 
+ INCLUDE (${unix}/vm/config.cmake)
+ 

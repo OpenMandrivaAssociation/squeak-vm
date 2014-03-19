@@ -2,14 +2,18 @@
 %define svntag	2614
 Name:		squeak-vm
 Version:	%{vmver}.%{svntag}
-Release:	%mkrel 4
+Release:	%mkrel 5
 Summary:	The Squeak virtual machine
 Group:		Development/Other
 License:	MIT
 URL:            http://squeakvm.org/unix
 Source0:	http://squeakvm.org/unix/release/Squeak-%{version}-src.tar.gz
 Source2:	squeak-desktop-files.tar.gz
-Patch0:		Squeak-4.10.2.2614-fix-str-fmt.patch
+Patch0:         squeak-vm-dprintf.patch
+Patch1:         alsa-fixes.patch
+Patch2:         squeak-vm-4.10.2-fix-cmake.patch
+Patch3:         squeak-vm-4.10.2-squeak-init-fix.patch
+Patch4:         squeak-vm-4.10.2-format-security.patch
 
 BuildRequires:	cmake
 BuildRequires:	pkgconfig(audiofile)
@@ -39,7 +43,14 @@ This package contains just the Squeak virtual machine.
 
 %prep
 %setup -q -n Squeak-%{version}-src -a 2
-%patch0 -p0
+%patch0 -p1 -b .dprintf
+%patch1 -p2 -b .alsa-fixes
+%patch2 -p1 -b .fix-cmake
+%patch3 -p1 -b .squeak-init-fix
+%patch4 -p1 -b .format-security
+
+# Fix libdir
+sed -i 's|libdir="${prefix}/lib/squeak"|libdir="%{_libdir}/squeak"|' unix/cmake/squeak.in
 
 # The source files chmod'd here have the execute bit set in the upstream tarball
 # which bothers rpmlint, need submit a request upstream to have this changed
@@ -86,11 +97,6 @@ do
   install -m0644 squeak${size}.png %{icons_dir}/${size}x${size}/mimetypes/application-x-squeak-image.png
   install -m0644 squeaksource${size}.png %{icons_dir}/${size}x${size}/mimetypes/application-x-squeak-source.png
 done
-
-%ifarch x86_64 ppc64
-    mkdir -p %{buildroot}%{_libdir}/squeak
-    mv -f %{buildroot}%{_prefix}/{lib,%{_lib}}/squeak/%{vmver}-%{svntag}
-%endif
 
 # If an image cant find the .sources in the current directory it will look
 # in %{_libdir}/squeak/%{vmver}

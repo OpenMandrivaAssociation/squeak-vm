@@ -1,0 +1,12 @@
+diff -up Squeak-4.10.2.2614-src-no-mp3/unix/vm-display-fbdev/sqUnixFBDevFramebuffer.c.orig Squeak-4.10.2.2614-src-no-mp3/unix/vm-display-fbdev/sqUnixFBDevFramebuffer.c
+--- Squeak-4.10.2.2614-src-no-mp3/unix/vm-display-fbdev/sqUnixFBDevFramebuffer.c.orig	2009-08-19 13:36:33.000000000 +0200
++++ Squeak-4.10.2.2614-src-no-mp3/unix/vm-display-fbdev/sqUnixFBDevFramebuffer.c	2012-11-22 16:01:49.753763504 +0100
+@@ -508,7 +508,7 @@ static void fb_initVisual(_self)
+   self->size= fb_height(self) * self->fix.line_length;
+   self->pitch= self->fix.line_length / self->var.bits_per_pixel * 8;
+ 
+-  debugf("%s: %dx%dx%d+%x+%x (%dx%d) %s, rgb %d+%d %d+%d %d+%d pitch %d(%d)\n", self->fbName,
++  debugf("%s: %dx%dx%d+%x+%x (%dx%d) %s, rgb %d+%d %d+%d %d+%d pitch %d(%ld)\n", self->fbName,
+ 	 self->var.xres, self->var.yres, self->var.bits_per_pixel, self->var.xoffset, self->var.yoffset,
+ 	 self->var.xres_virtual, self->var.yres_virtual,
+ 	 visualName(self),

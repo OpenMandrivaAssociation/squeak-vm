@@ -1,0 +1,57 @@
+diff -up Squeak-4.10.2.2614-src-no-mp3/unix/cmake/squeak.in.orig Squeak-4.10.2.2614-src-no-mp3/unix/cmake/squeak.in
+--- Squeak-4.10.2.2614-src-no-mp3/unix/cmake/squeak.in.orig	2012-11-23 11:01:10.000000000 +0100
++++ Squeak-4.10.2.2614-src-no-mp3/unix/cmake/squeak.in	2012-11-23 11:03:38.940563799 +0100
+@@ -78,19 +78,27 @@ elif test -x "${bindir}/${ck}"; then ck=
+ elif test -x "`which ${ck}`";	then ck="`which ${ck}`"
+ fi
+ 
+-if test   -z "${image}";	then image="${SQUEAK_IMAGE}"; fi
+-if test   -z "${image}";	then image="squeak";	      fi
+-if test   -f "${image}.image";	then image="${image}.image";  fi
++for f in "$SQUEAKHOME" . "$HOME"
++do
++  cd "$f" 2> /dev/null || continue
++  if test   -z "${image}";	then image="${SQUEAK_IMAGE}"; fi
++  if test   -z "${image}";	then image="squeak";	      fi
++  if test   -f "${image}.image";	then image="${image}.image";  fi
++  test -f "$image" && break
++  cd "$OLDPWD"
++done
+ 
+-if test "${info}"; then
+-    if test ! -x "${ck}"; then
++if test ! -x "${ck}"; then
+ 	echo "cannot find executable file: ${ck}" >&2
+ 	exit 1
+-    fi
+-    if test ! -f "${image}"; then
+-	echo "cannot find image file: ${image}" >&2
++fi
++if test ! -f "${image}"; then
++	MSG="cannot find image file: ${image}, did you run 'inisqueak -m'?"
++	echo "$MSG" >&2
++	xmessage "$MSG" 2>/dev/null
+ 	exit 1
+-    fi
++fi
++if test "${info}"; then
+     exec "${ck}" "${image}"
+ fi
+ 
+@@ -115,7 +120,6 @@ if test -z "${vms}"; then
+ fi
+ 
+ for avm in ${vms}; do
+-    echo CHECKING ${avm}
+     if test -x "${plgdir}/${avm}"; then	# bin/squeak -> lib/squeak/x.y-z/squeakvm
+ 	vm="${plgdir}/${avm}"
+ 	plugins="${plgdir}"
+@@ -124,7 +128,7 @@ for avm in ${vms}; do
+ 	vm="${bindir}/${avm}"
+ 	plugins="${bindir}/%n"
+ 	break;
+-    elif test -x "`which ${avm}`"; then
++    elif test -x "`which ${avm} 2>/dev/null`"; then
+ 	vm="`which ${avm}`"
+ 	plugins=""
+ 	break;
