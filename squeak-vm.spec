@@ -2,7 +2,7 @@
 %define svntag	2614
 Name:		squeak-vm
 Version:	%{vmver}.%{svntag}
-Release:	%mkrel 5
+Release:	%mkrel 6
 Summary:	The Squeak virtual machine
 Group:		Development/Other
 License:	MIT
@@ -49,8 +49,12 @@ This package contains just the Squeak virtual machine.
 %patch3 -p1 -b .squeak-init-fix
 %patch4 -p1 -b .format-security
 
-# Fix libdir
-sed -i 's|libdir="${prefix}/lib/squeak"|libdir="%{_libdir}/squeak"|' unix/cmake/squeak.in
+sed -i 's|SET\s*\(imgdir\s+.+\)|SET (imgdir share/squeak)|i;
+s|SET\s*\(plgdir\s+.+\)|SET (plgdir %{_lib}/squeak/${version}${versionsuffix})|i' \
+unix/CMakeLists.txt
+
+sed -i 's|^libdir=.*$|libdir="%{_libdir}/squeak"|' unix/cmake/squeak.in
+sed -i 's|^libdir=.*$|libdir="%{_libdir}/squeak"|' unix/cmake/squeak.sh.in
 
 # The source files chmod'd here have the execute bit set in the upstream tarball
 # which bothers rpmlint, need submit a request upstream to have this changed
@@ -66,19 +70,6 @@ popd
 pushd unix
 %makeinstall_std -C build
 popd
-#cp -f unix/config/inisqueak.in %{buildroot}%{_bindir}/inisqueak
-perl -pi					\
-	-e 's|\@SQ_MAJOR\@|41|;'		\
-	-e 's|\@SQ_VERSION\@|4.1|;'		\
-	-e 's|\@prefix\@|%{_prefix}|;'		\
-	-e 's|\@exec_prefix\@|%{_prefix}|;'	\
-	-e 's|\@bindir\@|%{_bindir}|;'		\
-	-e 's|\@imgdir\@|%{_datadir}/squeak|;'	\
-	-e 's|\@plgdir\@|%{_datadir}/squeak|;'	\
-	%{buildroot}%{_bindir}/inisqueak
-perl -pi					\
-	-e 's|/lib/squeak|/%{_lib}/squeak|;'	\
-	%{buildroot}%{_bindir}/squeak{,.sh}
 
 # these files will be put in std RPM doc location
 rm -rf %{buildroot}%{_prefix}/doc/squeak
