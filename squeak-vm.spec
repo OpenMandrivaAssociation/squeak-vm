@@ -1,38 +1,41 @@
-%define vmver	4.10.2
-%define svntag	2614
+%define vmver 4.10.2
+%define svntag 2614
+
+Summary:	The Squeak virtual machine
 Name:		squeak-vm
 Version:	%{vmver}.%{svntag}
-Release:	%mkrel 6
-Summary:	The Squeak virtual machine
-Group:		Development/Other
+Release:	7
 License:	MIT
-URL:            http://squeakvm.org/unix
+Group:		Development/Other
+Url:		http://squeakvm.org/unix
 Source0:	http://squeakvm.org/unix/release/Squeak-%{version}-src.tar.gz
 Source2:	squeak-desktop-files.tar.gz
-Patch0:         squeak-vm-dprintf.patch
-Patch1:         alsa-fixes.patch
-Patch2:         squeak-vm-4.10.2-fix-cmake.patch
-Patch3:         squeak-vm-4.10.2-squeak-init-fix.patch
-Patch4:         squeak-vm-4.10.2-format-security.patch
+Patch0:		squeak-vm-dprintf.patch
+Patch1:		alsa-fixes.patch
+Patch2:		squeak-vm-4.10.2-fix-cmake.patch
+Patch3:		squeak-vm-4.10.2-squeak-init-fix.patch
+Patch4:		squeak-vm-4.10.2-format-security.patch
 
 BuildRequires:	cmake
+BuildRequires:	pkgconfig(alsa)
 BuildRequires:	pkgconfig(audiofile)
-BuildRequires:	x11-proto-devel
-BuildRequires:	pkgconfig(x11)
-BuildRequires:	desktop-file-utils
-BuildRequires:	alsa-oss-devel
-BuildRequires:	pkgconfig(vorbis)
-BuildRequires:	pkgconfig(theora)
-BuildRequires:	pkgconfig(speex)
 BuildRequires:	pkgconfig(dbus-1)
-BuildRequires:	pkgconfig(pango)
+BuildRequires:	pkgconfig(ext2fs)
+BuildRequires:	pkgconfig(freetype2)
+BuildRequires:	pkgconfig(gl)
 BuildRequires:	pkgconfig(gstreamer-0.10)
 BuildRequires:	pkgconfig(ice)
+BuildRequires:	pkgconfig(libpulse)
+BuildRequires:	pkgconfig(pango)
 BuildRequires:	pkgconfig(sm)
+BuildRequires:	pkgconfig(speex)
+BuildRequires:	pkgconfig(theora)
+BuildRequires:	pkgconfig(vorbis)
+BuildRequires:	pkgconfig(x11)
 BuildRequires:	pkgconfig(xext)
-BuildRequires:	pkgconfig(ext2fs)
+BuildRequires:	pkgconfig(xproto)
+BuildRequires:	pkgconfig(xt)
 Requires:	zenity
-Obsoletes:	squeak-vm-nonXOplugins
 
 %description
 Squeak is a full-featured implementation of the Smalltalk programming
@@ -40,6 +43,19 @@ language and environment based on (and largely compatible with) the original
 Smalltalk-80 system.
 
 This package contains just the Squeak virtual machine.
+
+%files
+%doc unix/ChangeLog unix/doc/{README*,LICENSE,*RELEASE_NOTES}
+%{_bindir}/*
+%{_datadir}/applications/*
+%{_datadir}/icons/gnome/*/*/*
+%{_datadir}/mime/packages/*
+%{_datadir}/pixmaps/*
+%dir %{_libdir}/squeak
+%{_libdir}/squeak/*
+%{_mandir}/man*/*
+
+#----------------------------------------------------------------------------
 
 %prep
 %setup -q -n Squeak-%{version}-src -a 2
@@ -95,13 +111,3 @@ cd %{buildroot}%{_libdir}/squeak/%{vmver}-%{svntag}
 DOTDOTS=$(echo %{_libdir}/squeak/%{vmver}-%{svntag} | sed -e 's:/[^/]\+:../:g')
 ln -s ${DOTDOTS}%{_datadir}/squeak/SqueakV41.sources .
 
-%files
-%doc unix/ChangeLog unix/doc/{README*,LICENSE,*RELEASE_NOTES}
-%{_bindir}/*
-%{_datadir}/applications/*
-%{_datadir}/icons/gnome/*/*/*
-%{_datadir}/mime/packages/*
-%{_datadir}/pixmaps/*
-%dir %{_libdir}/squeak
-%{_libdir}/squeak/*
-%{_mandir}/man*/*
