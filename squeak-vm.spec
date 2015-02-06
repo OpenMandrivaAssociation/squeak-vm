@@ -4,7 +4,7 @@
 Summary:	The Squeak virtual machine
 Name:		squeak-vm
 Version:	%{vmver}.%{svntag}
-Release:	7
+Release:	8
 License:	MIT
 Group:		Development/Other
 Url:		http://squeakvm.org/unix
