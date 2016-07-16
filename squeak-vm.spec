@@ -40,6 +40,7 @@ BuildRequires:	pkgconfig(x11)
 BuildRequires:	pkgconfig(xext)
 BuildRequires:	pkgconfig(xproto)
 BuildRequires:	pkgconfig(xt)
+BuildRequires:	jpeg-devel
 Requires:	zenity
 
 %description
