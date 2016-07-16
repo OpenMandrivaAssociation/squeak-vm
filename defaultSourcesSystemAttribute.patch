@@ -1,0 +1,12 @@
+--- a/unix/vm/sqUnixMain.c
++++ b/unix/vm/sqUnixMain.c
+@@ -448,6 +448,9 @@
+       case 1006:
+ 	/* vm build string */
+ 	return VM_BUILD_STRING;
++      case 1007:
++	/* default sources directory */
++	return "/usr/share/squeak";
+       default:
+ 	if ((id - 2) < squeakArgCnt)
+ 	  return squeakArgVec[id - 2];

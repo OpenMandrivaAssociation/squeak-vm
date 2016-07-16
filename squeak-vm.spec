@@ -15,6 +15,11 @@ Patch1:		alsa-fixes.patch
 Patch2:		squeak-vm-4.10.2-fix-cmake.patch
 Patch3:		squeak-vm-4.10.2-squeak-init-fix.patch
 Patch4:		squeak-vm-4.10.2-format-security.patch
+Patch5:		clang_FTBFS_Wreturn-type.patch
+Patch6:		avoid_embedded_libs.patch
+Patch7:		defaultSourcesSystemAttribute.patch
+Patch9:		mpeg_includes.patch
+
 
 BuildRequires:	cmake
 BuildRequires:	pkgconfig(alsa)
@@ -23,7 +28,7 @@ BuildRequires:	pkgconfig(dbus-1)
 BuildRequires:	pkgconfig(ext2fs)
 BuildRequires:	pkgconfig(freetype2)
 BuildRequires:	pkgconfig(gl)
-BuildRequires:	pkgconfig(gstreamer-0.10)
+#BuildRequires:	pkgconfig(gstreamer-0.10)
 BuildRequires:	pkgconfig(ice)
 BuildRequires:	pkgconfig(libpulse)
 BuildRequires:	pkgconfig(pango)
@@ -59,11 +64,7 @@ This package contains just the Squeak virtual machine.
 
 %prep
 %setup -q -n Squeak-%{version}-src -a 2
-%patch0 -p1 -b .dprintf
-%patch1 -p2 -b .alsa-fixes
-%patch2 -p1 -b .fix-cmake
-%patch3 -p1 -b .squeak-init-fix
-%patch4 -p1 -b .format-security
+%apply_patches
 
 sed -i 's|SET\s*\(imgdir\s+.+\)|SET (imgdir share/squeak)|i;
 s|SET\s*\(plgdir\s+.+\)|SET (plgdir %{_lib}/squeak/${version}${versionsuffix})|i' \

@@ -1,5 +1,5 @@
---- trunk/platforms/unix/vm-sound-ALSA/sqUnixSoundALSA.c	2013/03/26 01:49:32	2711
-+++ trunk/platforms/unix/vm-sound-ALSA/sqUnixSoundALSA.c	2013/04/04 05:05:14	2712
+--- platforms/unix/vm-sound-ALSA/sqUnixSoundALSA.c	2013/03/26 01:49:32	2711
++++ platforms/unix/vm-sound-ALSA/sqUnixSoundALSA.c	2013/04/04 05:05:14	2712
 @@ -2,7 +2,7 @@
   *
   * Author: Ian.Piumarta@squeakland.org

@@ -1,0 +1,102 @@
+Description: fix FTBFS with clang instead of gcc
+Author: Nicolas Sévelin-Radiguet <nicosr@free.fr>
+Last-Update: 2014-03-06
+--- a/unix/vm-sound-pulse/sqUnixSoundPulseAudio.c
++++ b/unix/vm-sound-pulse/sqUnixSoundPulseAudio.c
+@@ -995,10 +995,10 @@
+ static sqInt sound_StopRecording(void) {
+ DBGMSG(">sound_StopRecording()");
+ 
+-	if (!audioIn.open) return;
++	if (!audioIn.open) return 0;
+ 	audioIn.open = false;
+ 	
+-	if (NULL == audioIn.pa_conn) return;
++	if (NULL == audioIn.pa_conn) return 1;
+ 	
+ 	ioThreadStall(&audioIn);
+ 
+diff --git a/Cross/plugins/Mpeg3Plugin/libmpeg/audio/layer3.c b/Cross/plugins/Mpeg3Plugin/libmpeg/audio/layer3.c
+index ac7e989..b44d6df 100644
+--- a/Cross/plugins/Mpeg3Plugin/libmpeg/audio/layer3.c
++++ b/Cross/plugins/Mpeg3Plugin/libmpeg/audio/layer3.c
+@@ -884,7 +884,7 @@ int mpeg3audio_III_antialias(mpeg3audio_t *audio,
+ 	if(gr_info->block_type == 2) 
+ 	{
+     	if(!gr_info->mixed_block_flag) 
+-        	return;
++        	return NULL;
+     	sblim = 1; 
+ 	}
+ 	else 
+diff --git a/Cross/plugins/Mpeg3Plugin/libmpeg/video/getpicture.c b/Cross/plugins/Mpeg3Plugin/libmpeg/video/getpicture.c
+index 6b3d9f7..8e0566f 100644
+--- a/Cross/plugins/Mpeg3Plugin/libmpeg/video/getpicture.c
++++ b/Cross/plugins/Mpeg3Plugin/libmpeg/video/getpicture.c
+@@ -205,7 +205,7 @@ int mpeg3video_getintrablock(mpeg3_slice_t *slice,
+ 		{
+ /*    	  	fprintf(stderr, "mpeg3video_getintrablock: invalid Huffman code\n"); */
+     	  	slice->fault = 1;
+-    	  	return;
++    	  	return 1;
+     	}
+ 
+     	mpeg3slice_flushbits(slice_buffer, tab->len);
+@@ -240,7 +240,7 @@ int mpeg3video_getintrablock(mpeg3_slice_t *slice,
+ 		else
+ 		{
+     	  	slice->fault = 1;
+-    	  	return;
++    	  	return 1;
+ 		}
+ 			
+ 
+@@ -397,7 +397,7 @@ int mpeg3video_getmpg2intrablock(mpeg3_slice_t *slice,
+ 	else                  
+ 		val = (dc_dct_pred[2] += mpeg3video_getdcchrom(slice_buffer));
+ 
+-  	if(slice->fault) return;
++  	if(slice->fault) return 1;
+ #ifdef HAVE_MMX
+ 	if(video->have_mmx)
+   		bp[0] = val << (7 - video->dc_prec);
+@@ -463,7 +463,7 @@ int mpeg3video_getmpg2intrablock(mpeg3_slice_t *slice,
+ 			{
+ // invalid signed_level (escape)
+         		slice->fault = 1;
+-        		return;
++        		return 1;
+     	  	}
+     	  	if((sign = (val >= 2048)) != 0) val = 4096 - val;
+     	}
+@@ -545,7 +545,7 @@ int mpeg3video_getmpg2interblock(mpeg3_slice_t *slice,
+ 		{
+ // invalid Huffman code
+     		slice->fault = 1;
+-    		return;
++    		return 1;
+     	}
+ 
+     	mpeg3slice_flushbits(slice_buffer, tab->len);
+diff --git a/Cross/plugins/Mpeg3Plugin/libmpeg/video/idct.c b/Cross/plugins/Mpeg3Plugin/libmpeg/video/idct.c
+index 7c394ea..6b207f8 100644
+--- a/Cross/plugins/Mpeg3Plugin/libmpeg/video/idct.c
++++ b/Cross/plugins/Mpeg3Plugin/libmpeg/video/idct.c
+@@ -79,7 +79,7 @@ int mpeg3video_idctrow(short *blk)
+           (x4 = blk[1]) | (x5 = blk[7]) | (x6 = blk[5]) | (x7 = blk[3])))
+ 	{
+       blk[0]=blk[1]=blk[2]=blk[3]=blk[4]=blk[5]=blk[6]=blk[7]=blk[0]<<3;
+-      return;
++      return 0;
+ 	}
+ 
+ 	x0 = (blk[0]<<11) + 128; /* for proper rounding in the fourth stage */
+@@ -143,7 +143,7 @@ int mpeg3video_idctcol(short *blk)
+         (x4 = blk[8*1]) | (x5 = blk[8 * 7]) | (x6 = blk[8 * 5]) | (x7 = blk[8 * 3]))){
+     blk[8*0]=blk[8*1]=blk[8 * 2]=blk[8 * 3]=blk[8 * 4]=blk[8 * 5]=blk[8 * 6]=blk[8 * 7]=
+       (blk[8*0]+32)>>6;
+-    return;
++    return 0;
+   }
+ 
+   x0 = (blk[8*0]<<8) + 8192;

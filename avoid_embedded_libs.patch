@@ -1,0 +1,94 @@
+Description: Link against system shared PCRE and JPEG libraries
+Author: Neil Williams <codehelp@debian.org>
+Author: Julian Taylor <jtaylor.debian@googlemail.com>
+Bug-Debian: http://bugs.debian.org/634240
+Bug-Debian: http://bugs.debian.org/710367
+Last-Update: 2015-07-21
+
+--- a/unix/CMakeLists.txt
++++ b/unix/CMakeLists.txt
+@@ -117,10 +117,17 @@
+   LIST (APPEND squeak_libs "${lib}")
+ ENDMACRO (USE_LIBRARY)
+ 
++MACRO (USE_LIBRARY_SHARED lib)
++  LIST (APPEND squeak_libs_shared "${lib}")
++ENDMACRO (USE_LIBRARY_SHARED)
++
+ MACRO (USE_FRAMEWORK fwk)
+   USE_LIBRARY ("-framework ${fwk}")
+ ENDMACRO (USE_FRAMEWORK)
+ 
++USE_LIBRARY_SHARED ("-lpcre")
++USE_LIBRARY_SHARED ("-ljpeg")
++
+ MACRO (CONFIG_DEFINE var)
+   LIST (APPEND config_vars "${var}")
+ ENDMACRO (CONFIG_DEFINE var)
+--- a/Cross/plugins/JPEGReadWriter2Plugin/JPEGReadWriter2Plugin.h
++++ b/Cross/plugins/JPEGReadWriter2Plugin/JPEGReadWriter2Plugin.h
+@@ -12,6 +12,7 @@
+ typedef struct error_mgr2* error_ptr2;
+ 
+ void error_exit (j_common_ptr cinfo);
+-GLOBAL(void) jpeg_mem_src (j_decompress_ptr cinfo, char * pSourceData, unsigned sourceDataSize);
++//GLOBAL(void) jpeg_mem_src (j_decompress_ptr cinfo, char * pSourceData, unsigned sourceDataSize);
+ GLOBAL(int) jpeg_mem_src_newLocationOfData (j_decompress_ptr cinfo, char * pSourceData, unsigned sourceDataSize);
+-GLOBAL(void) jpeg_mem_dest (j_compress_ptr cinfo, char * pDestination, unsigned *pDestinationSize);
+\ No newline at end of file
++//GLOBAL(void) jpeg_mem_dest (j_compress_ptr cinfo, char * pDestination, unsigned *pDestinationSize);
++
+--- a/Cross/plugins/JPEGReadWriter2Plugin/jmemdatasrc.c
++++ b/Cross/plugins/JPEGReadWriter2Plugin/jmemdatasrc.c
+@@ -149,7 +149,7 @@
+ METHODDEF(void) term_source (j_decompress_ptr cinfo) {
+   /* no work necessary here */
+ }
+-
++#if 0
+ /*
+  * Prepare for input from a stdio stream.
+  * The caller must have already opened the stream, and is responsible
+@@ -187,6 +187,7 @@
+   src->pub.bytes_in_buffer = 0; /* forces fill_input_buffer on first read */
+   src->pub.next_input_byte = NULL; /* until buffer loaded */
+ }
++#endif
+ /* This function allows data to be moved if necessary */
+ GLOBAL(int) jpeg_mem_src_newLocationOfData (j_decompress_ptr cinfo, char * pSourceData, unsigned sourceDataSize) {
+   my_src_ptr src;
+@@ -198,4 +199,4 @@
+   src->actualPos = pSourceData + offset;
+ 
+   return((src->actualPos + src->bytesLeft) == (pSourceData + sourceDataSize));
+-}
+\ No newline at end of file
++}
+--- a/Cross/plugins/JPEGReadWriter2Plugin/jmemdatadst.c
++++ b/Cross/plugins/JPEGReadWriter2Plugin/jmemdatadst.c
+@@ -113,7 +113,7 @@
+       ERREXIT(cinfo, JERR_FILE_WRITE);
+   }
+ }
+-
++#if 0
+ /*
+  * Prepare for output to a stdio stream.
+  * The caller must have already opened the stream, and is responsible
+@@ -143,3 +143,5 @@
+   dest->pSpaceUsed = pDestinationSize;
+   *(dest->pSpaceUsed) = 0;
+ }
++#endif
++
+--- a/unix/vm/build.cmake
++++ b/unix/vm/build.cmake
+@@ -45,7 +45,7 @@
+ 
+ SET_TARGET_PROPERTIES (squeakvm${scriptsuffix} PROPERTIES LINK_FLAGS "${CMAKE_EXE_EXPORTS_C_FLAG}")
+ 
+-TARGET_LINK_LIBRARIES (squeakvm${scriptsuffix} m ${squeak_libs} ${vm_link_libraries})
++TARGET_LINK_LIBRARIES (squeakvm${scriptsuffix} m ${squeak_libs} ${vm_link_libraries} ${squeak_libs_shared})
+ 
+ INSTALL (PROGRAMS ${bld}/squeakvm${scriptsuffix} DESTINATION ${plgdir})
+ 
