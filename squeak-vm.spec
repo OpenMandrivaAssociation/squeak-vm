@@ -65,7 +65,7 @@ This package contains just the Squeak virtual machine.
 
 %prep
 %setup -q -n Squeak-%{version}-src -a 2
-%apply_patches
+%autopatch -p1
 
 sed -i 's|SET\s*\(imgdir\s+.+\)|SET (imgdir share/squeak)|i;
 s|SET\s*\(plgdir\s+.+\)|SET (plgdir %{_lib}/squeak/${version}${versionsuffix})|i' \
