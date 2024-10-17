@@ -7,7 +7,7 @@ Version:	%{vmver}.%{svntag}
 Release:	8
 License:	MIT
 Group:		Development/Other
-Url:		http://squeakvm.org/unix
+Url:		https://squeakvm.org/unix
 Source0:	http://squeakvm.org/unix/release/Squeak-%{version}-src.tar.gz
 Source2:	squeak-desktop-files.tar.gz
 Patch0:		squeak-vm-dprintf.patch
